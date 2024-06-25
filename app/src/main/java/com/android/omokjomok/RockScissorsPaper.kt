@@ -15,8 +15,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
+interface SelectedRSP
+class Rock : SelectedRSP
+class Scissor : SelectedRSP
+class Paper : SelectedRSP
+
+fun SelectedRSP.versus(rsp: SelectedRSP): Int {
+    return when {
+        this::class == rsp::class -> 0
+        (this is Rock && rsp is Scissor)
+                || (this is Scissor && rsp is Paper)
+                || (this is Paper && rsp is Rock)
+        -> 1
+        else -> -1
+    }
+}
+
 @Composable
-fun RSPGroup(context: Context) {
+fun RSPGroup(context: Context, rsp: SelectedRSP?, onChange: (SelectedRSP?) -> Unit) {
     val drawingRock = painterResource(id = R.drawable.rock)
     val drawingScissors = painterResource(id = R.drawable.scissors)
     val drawingPaper = painterResource(id = R.drawable.paper)
@@ -31,9 +47,7 @@ fun RSPGroup(context: Context) {
             Modifier
                 .size(100.dp)
                 .clickable {
-                    Toast
-                        .makeText(context, "바위", Toast.LENGTH_SHORT)
-                        .show()
+                    onChange(Rock())
                 }
         )
         Image(
@@ -42,9 +56,7 @@ fun RSPGroup(context: Context) {
             Modifier
                 .size(100.dp)
                 .clickable {
-                    Toast
-                        .makeText(context, "가위", Toast.LENGTH_SHORT)
-                        .show()
+                    onChange(Scissor())
                 }
         )
         Image(
@@ -53,9 +65,7 @@ fun RSPGroup(context: Context) {
             Modifier
                 .size(100.dp)
                 .clickable {
-                    Toast
-                        .makeText(context, "보", Toast.LENGTH_SHORT)
-                        .show()
+                    onChange(Paper())
                 }
         )
 
