@@ -1,12 +1,9 @@
 package com.android.omokjomok
 
-import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -15,12 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
-interface SelectedRSP
-class Rock : SelectedRSP
-class Scissor : SelectedRSP
-class Paper : SelectedRSP
+interface SelectedRsp
+class Rock : SelectedRsp
+class Scissor : SelectedRsp
+class Paper : SelectedRsp
 
-fun SelectedRSP.versus(rsp: SelectedRSP): Int {
+fun SelectedRsp.versus(rsp: SelectedRsp): Int {
     return when {
         this::class == rsp::class -> 0
         (this is Rock && rsp is Scissor)
@@ -32,7 +29,7 @@ fun SelectedRSP.versus(rsp: SelectedRSP): Int {
 }
 
 @Composable
-fun RSPGroup(context: Context, rsp: SelectedRSP?, onChange: (SelectedRSP?) -> Unit) {
+fun RspGroup(onChange: (SelectedRsp?) -> Unit) {
     val drawingRock = painterResource(id = R.drawable.rock)
     val drawingScissors = painterResource(id = R.drawable.scissors)
     val drawingPaper = painterResource(id = R.drawable.paper)
@@ -70,4 +67,26 @@ fun RSPGroup(context: Context, rsp: SelectedRSP?, onChange: (SelectedRSP?) -> Un
         )
 
     }
+}
+
+fun textChange(result: Int): Pair<String, String> {
+    val firstString: String
+    val secondString: String
+    when (result) {
+        1 -> {
+            firstString = "승리!"
+            secondString = "패배..."
+        }
+
+        -1 -> {
+            firstString = "패배..."
+            secondString = "승리!"
+        }
+
+        else -> {
+            firstString = "무승부"
+            secondString = "무승부"
+        }
+    }
+    return Pair(firstString, secondString)
 }

@@ -1,5 +1,6 @@
 package com.android.omokjomok
 
+import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -71,56 +72,50 @@ fun MainScreen(
 
 @Composable
 fun GameScreen() {
-    RSPScreen()
+    RspScreen()
 }
 
 // 가위바위보 화면
 @Composable
-fun RSPScreen() {
-    val context = LocalContext.current
-    val selectedRSP: SelectedRSP? = null
-    var firstState by remember { mutableStateOf(selectedRSP) }
-    var secondState by remember { mutableStateOf(selectedRSP) }
+fun RspScreen() {
+    val selectedRsp: SelectedRsp? = null
+    var firstState by remember { mutableStateOf(selectedRsp) }
+    var secondState by remember { mutableStateOf(selectedRsp) }
     var firstString by remember { mutableStateOf("선택 중...") }
     var secondString by remember { mutableStateOf("선택 중...") }
-    val onFirstChange = { rsp: SelectedRSP? ->
+    val onFirstChange = { rsp: SelectedRsp? ->
         firstState = rsp
         firstString = "선택 완료!"
-        if(secondState != null)
-            when(firstState?.versus(secondState!!)) {
-                1 -> {
-                    firstString = "승리!"
-                    secondString = "패배..."
-                }
-                -1 -> {
-                    firstString = "패배..."
-                    secondString = "승리!"
-                }
-                else -> {
-                    firstString = "무승부"
-                    secondString = "무승부"
-                }
-            }
+        if (secondState != null) {
+            val pair = textChange(firstState?.versus(secondState!!) ?: 0)
+            firstString = pair.first
+            secondString = pair.second
+        }
     }
-    val onSecondChange = { rsp: SelectedRSP? ->
+    val onSecondChange = { rsp: SelectedRsp? ->
         secondState = rsp
         secondString = "선택 완료!"
-        if(firstState != null)
-            when(firstState?.versus(secondState!!)) {
-                1 -> {
-                    firstString = "승리!"
-                    secondString = "패배..."
-                }
-                -1 -> {
-                    firstString = "패배..."
-                    secondString = "승리!"
-                }
-                else -> {
-                    firstString = "무승부"
-                    secondString = "무승부"
-                }
-            }
+        if (firstState != null) {
+            val pair = textChange(firstState?.versus(secondState!!) ?: 0)
+            firstString = pair.first
+            secondString = pair.second
+        }
     }
+    RspUI(
+        onFirstChange = onFirstChange,
+        onSecondChange = onSecondChange,
+        firstString = firstString,
+        secondString = secondString
+    )
+}
+
+@Composable
+fun RspUI(
+    onFirstChange: (SelectedRsp?) -> Unit,
+    onSecondChange: (SelectedRsp?) -> Unit,
+    firstString: String,
+    secondString: String
+) {
     Column(
         Modifier
             .fillMaxSize()
@@ -128,15 +123,13 @@ fun RSPScreen() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceAround
     ) {
-        RSPGroup(context = context, firstState, onFirstChange)
+        RspGroup(onFirstChange)
         Text(text = firstString, fontSize = 40.sp)
         Text(text = "VS", fontSize = 30.sp)
         Text(text = secondString, fontSize = 40.sp)
-        RSPGroup(context = context, secondState, onSecondChange)
+        RspGroup(onSecondChange)
     }
 }
-
-//가위 < 바위 < 보 < 가위
 
 @Preview(showBackground = true, showSystemUi = false)
 @Composable
@@ -148,9 +141,9 @@ fun GreetingPreview() {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun RSPPreview() {
+fun RspPreview() {
     OmokJomokTheme {
-        RSPScreen()
+        RspScreen()
     }
 }
 
