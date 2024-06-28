@@ -11,9 +11,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -21,11 +23,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.omokjomok.ui.theme.OmokJomokTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+
+const val SCREEN_MAIN = 0
+const val SCREEN_GAME = 1
+
+const val RSP_USER_NUM = 2
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,19 +45,23 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             OmokJomokTheme {
+                /*TODO*/ // 인트를 게임으로 변경
                 var screenState by remember { mutableIntStateOf(0) }
                 val onButtonClick = {
                     screenState = 1
                 }
+                var endState by remember { mutableStateOf(false) }
+                val onEnd = {
+                    endState = false
+                }
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     when (screenState) {
-                        0 -> MainScreen(
+                        SCREEN_MAIN -> MainScreen(
                             name = "Android",
                             modifier = Modifier.padding(innerPadding),
                             onButtonClick
                         )
-
-                        1 -> GameScreen()
+                        SCREEN_GAME -> GameScreen()
                     }
                 }
             }
@@ -72,17 +88,20 @@ fun MainScreen(
 
 @Composable
 fun GameScreen() {
-    RspScreen()
+    RspScreen(1)
 }
 
 // 가위바위보 화면
 @Composable
-fun RspScreen() {
+fun RspScreen(playerNum: Int) {
     val selectedRsp: SelectedRsp? = null
+
     var firstState by remember { mutableStateOf(selectedRsp) }
-    var secondState by remember { mutableStateOf(selectedRsp) }
     var firstString by remember { mutableStateOf("선택 중...") }
+
+    var secondState by remember { mutableStateOf(selectedRsp) }
     var secondString by remember { mutableStateOf("선택 중...") }
+
     val onFirstChange = { rsp: SelectedRsp? ->
         firstState = rsp
         firstString = "선택 완료!"
@@ -101,12 +120,25 @@ fun RspScreen() {
             secondString = pair.second
         }
     }
+
     RspUI(
         onFirstChange = onFirstChange,
         onSecondChange = onSecondChange,
         firstString = firstString,
         secondString = secondString
     )
+}
+
+/*TODO*/ // 나중에 Game을 상태에 추가
+fun RockScissorPaper.playerAdd(playerNum: Int): Array<Player> {
+    lateinit var players: ArrayList<Player>
+    repeat(playerNum) {
+        players += Human(RspPlayer())
+    }
+    repeat(RSP_USER_NUM - playerNum) {
+        players += AI(RspPlayer())
+    }
+    return players.toTypedArray()
 }
 
 @Composable
@@ -123,11 +155,15 @@ fun RspUI(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceAround
     ) {
-        RspGroup(onFirstChange)
-        Text(text = firstString, fontSize = 40.sp)
-        Text(text = "VS", fontSize = 30.sp)
+        CompositionLocalProvider(LocalContentColor.provides(Color.Red)) {
+            RspGroup(onSecondChange)
+        }
         Text(text = secondString, fontSize = 40.sp)
-        RspGroup(onSecondChange)
+        Text(text = "VS", fontSize = 30.sp)
+        Text(text = firstString, fontSize = 40.sp)
+        CompositionLocalProvider(LocalContentColor.provides(Color.Blue)) {
+            RspGroup(onFirstChange)
+        }
     }
 }
 
@@ -143,7 +179,7 @@ fun GreetingPreview() {
 @Composable
 fun RspPreview() {
     OmokJomokTheme {
-        RspScreen()
+        RspScreen(1)
     }
 }
 
