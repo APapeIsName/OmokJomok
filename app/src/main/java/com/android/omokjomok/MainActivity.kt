@@ -94,6 +94,9 @@ fun GameScreen() {
 // 가위바위보 화면
 @Composable
 fun RspScreen(playerNum: Int) {
+    val rspPlayer = RspAI()
+    val ai = AI(rspPlayer)
+
     val selectedRsp: SelectedRsp? = null
 
     var firstState by remember { mutableStateOf(selectedRsp) }
@@ -130,16 +133,7 @@ fun RspScreen(playerNum: Int) {
 }
 
 /*TODO*/ // 나중에 Game을 상태에 추가
-fun RockScissorPaper.playerAdd(playerNum: Int): Array<Player> {
-    lateinit var players: ArrayList<Player>
-    repeat(playerNum) {
-        players += Human(RspPlayer())
-    }
-    repeat(RSP_USER_NUM - playerNum) {
-        players += AI(RspPlayer())
-    }
-    return players.toTypedArray()
-}
+
 
 @Composable
 fun RspUI(
