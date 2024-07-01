@@ -37,8 +37,6 @@ import kotlinx.coroutines.launch
 const val SCREEN_MAIN = 0
 const val SCREEN_GAME = 1
 
-const val RSP_USER_NUM = 2
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,8 +92,6 @@ fun GameScreen() {
 // 가위바위보 화면
 @Composable
 fun RspScreen(playerNum: Int) {
-    val rspPlayer = RspAI()
-    val ai = AI(rspPlayer)
 
     val selectedRsp: SelectedRsp? = null
 
@@ -134,7 +130,6 @@ fun RspScreen(playerNum: Int) {
 
 /*TODO*/ // 나중에 Game을 상태에 추가
 
-
 @Composable
 fun RspUI(
     onFirstChange: (SelectedRsp?) -> Unit,
@@ -160,6 +155,8 @@ fun RspUI(
         }
     }
 }
+
+
 
 @Preview(showBackground = true, showSystemUi = false)
 @Composable
