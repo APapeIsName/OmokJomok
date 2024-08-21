@@ -9,6 +9,6 @@ class RockScissorPaper(private val player1: RspPlayer, private val player2: RspP
     override val number: Int = 2
 
     override fun play() {
-        player1.selectRsp().versus(player2.selectRsp())
+        player1.selectRsp() versus player2.selectRsp()
     }
 }

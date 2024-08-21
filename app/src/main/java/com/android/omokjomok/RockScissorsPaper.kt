@@ -30,7 +30,7 @@ class Rock : SelectedRsp
 class Scissor : SelectedRsp
 class Paper : SelectedRsp
 
-fun SelectedRsp.versus(rsp: SelectedRsp): Int {
+infix fun SelectedRsp.versus(rsp: SelectedRsp): Int {
     return when {
         this::class == rsp::class -> RSP_VS_DRAW
         (this is Rock && rsp is Scissor)
