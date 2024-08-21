@@ -67,6 +67,10 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+infix fun Int.plus(num:Int) {
+    println(this + num)
+}
+
 @Composable
 fun MainScreen(
     name: String,
@@ -74,7 +78,7 @@ fun MainScreen(
     onButtonClick: () -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceAround,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
