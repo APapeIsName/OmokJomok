@@ -82,6 +82,7 @@ fun MainScreen(
         verticalArrangement = Arrangement.SpaceAround,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         Button(onClick = onButtonClick) {
             Text(text = "가위바위보")
         }
@@ -134,6 +135,8 @@ fun RspScreen(playerNum: Int) {
 
 /*TODO*/ // 나중에 Game을 상태에 추가
 
+// TEST
+
 @Composable
 fun RspUI(
     onFirstChange: (SelectedRsp?) -> Unit,
@@ -177,5 +180,3 @@ fun RspPreview() {
         RspScreen(1)
     }
 }
-
-
