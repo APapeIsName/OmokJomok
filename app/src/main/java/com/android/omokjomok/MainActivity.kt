@@ -135,7 +135,7 @@ fun RspScreen(playerNum: Int) {
 
 /*TODO*/ // 나중에 Game을 상태에 추가
 
-// TEST
+// TEST test
 
 @Composable
 fun RspUI(
