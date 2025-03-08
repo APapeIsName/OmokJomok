@@ -82,6 +82,7 @@ fun MainScreen(
         verticalArrangement = Arrangement.SpaceAround,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         Button(onClick = onButtonClick) {
             Text(text = "가위바위보")
         }
@@ -177,5 +178,3 @@ fun RspPreview() {
         RspScreen(1)
     }
 }
-
-
